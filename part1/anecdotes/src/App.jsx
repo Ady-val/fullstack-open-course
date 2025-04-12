@@ -48,6 +48,18 @@ const Votes = ({ votes }) => {
   )
 }
 
+const MostVoted = ({text}) => {
+  if (!text) {
+    return 
+  }
+  return (
+    <div>
+      <h1>Anecdote with most votes</h1>
+      <div>{text}</div>
+    </div>
+  )
+}
+
 const getRandomInt = (max) => {
   return Math.floor(Math.random() * max)
 }
@@ -57,24 +69,32 @@ function App() {
   const [anecdoteIndex, setAnecdoteIndex] = useState()
   const [votes, setVotes] = useState({})
   const [error, setError] = useState()
+  const [mostVoted, setMostVoted] = useState()
+  let maxKey
 
   const handleVote = () => {
+    const obj = {...votes}
     if (anecdoteIndex === undefined) {
       setError('You need to find an anecdote')
       return 
     }
 
     if (votes[anecdoteIndex]) {
-      setVotes({
-        ...votes,
-        [anecdoteIndex]: votes[anecdoteIndex] + 1
-      })
+      obj[anecdoteIndex] = votes[anecdoteIndex] + 1
     } else {
-      setVotes({
-        ...votes,
-        [anecdoteIndex]: 1
-      })
+      obj[anecdoteIndex] = 1
     }
+
+    if (Object.keys(obj) === 1) {
+      maxKey = anecdoteIndex
+    } else {
+      maxKey = Object.keys(obj).reduce((acc, key) => {
+        return obj[key] > obj[acc] ? key : acc;
+      });
+    }
+
+    setMostVoted(Number(maxKey))
+    setVotes(obj)
   }
 
   const handleChangeAnecdote = () => {
@@ -92,6 +112,7 @@ function App() {
       <Button handleClick={handleVote} text="Vote" />
       <Button handleClick={handleChangeAnecdote} text="Find Anecdote" />
       <div>{error}</div>
+      <MostVoted text={mostVoted && anecdotes[mostVoted]} />
     </>
   )
 }
