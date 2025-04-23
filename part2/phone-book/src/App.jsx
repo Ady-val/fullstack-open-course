@@ -1,14 +1,21 @@
 import { useState } from 'react'
+import axios from 'axios'
 import PhoneBook from './components/PhoneBook'
-import Input from './components/Input'
 import Filter from './components/Filter'
 import PhonebookForm from './components/PhonebookForm'
+import { useEffect } from 'react'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '555-555-5555' }
-  ])
+  const [persons, setPersons] = useState([])
   const [nameFilter, setNameFilter] = useState('')
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }, [])
 
   const filteredPersons = data => {
     if (!nameFilter) return data;
