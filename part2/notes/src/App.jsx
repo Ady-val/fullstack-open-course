@@ -28,15 +28,12 @@ const App = () => {
       important: Math.random() < 0.5,
       id: notes.length + 1,
     }
-  
-    setNotes(notes.concat(noteObject))
-    setNewNote('add a new note...')
 
     noteService
       .create(noteObject)
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
-        setNewNote('')
+        setNewNote('add a new note...')
       })
   }
 
